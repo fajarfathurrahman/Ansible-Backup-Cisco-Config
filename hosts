@@ -1,0 +1,23 @@
+[all:vars]
+username=cisco
+password=cisco
+ansible_connection=local
+
+[cisco-ios:vars]
+username=cisco
+password=cisco
+
+[cisco-nxos:vars]
+username=cisco
+password=cisco
+
+[local]
+localhost
+
+[cisco-ios]
+SWITCH-ANSIBLE host=10.85.0.182
+FIREWALL-ANSIBLE host=10.85.0.184
+#10.85.0.183
+
+[cisco-nxos]
+ROUTER-ANSIBLE host=10.85.0.183

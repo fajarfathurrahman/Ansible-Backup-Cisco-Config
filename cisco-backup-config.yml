@@ -1,0 +1,66 @@
+---
+### Created by Fajar for IT Automation test case ###
+- name: Create today local directory
+  hosts: localhost
+  gather_facts: no
+  connection: local
+  tasks:
+    - name: timestamp
+      local_action: command date +%Y%m%d
+      register: timestamp
+
+    - name: create local directory
+      file:
+        path: /etc/ansible/backups/{{ timestamp.stdout }}
+        state: directory
+        mode: 0755 
+
+- name: Save Configurations (IOS)
+  hosts: cisco-ios
+  gather_facts: no
+  vars:
+    creds:
+      host: "{{ host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+  tasks:
+    - name: timestamp
+      local_action: command date +%Y%m%d
+      register: timestamp
+
+    - ios_command:
+        provider: "{{ creds }}"
+        commands: show run
+      register: show_run_ios
+
+#    - debug:
+#        msg: "{{ show_run_ios.stdout[0] }}"
+
+    - copy:
+        content: "{{ show_run_ios.stdout[0] }}"
+        dest: "/etc/ansible/backups/{{ timestamp.stdout }}/{{ inventory_hostname }}_{{ timestamp.stdout }}.txt"
+
+- name: Save Configurations (NX-OS)
+  hosts: cisco-nxos
+  gather_facts: no
+  vars:
+    creds:
+      host: "{{ host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+  tasks:
+    - name: timestamp
+      local_action: command date +%Y%m%d
+      register: timestamp
+
+    - nxos_command:
+        provider: "{{ creds }}"
+        commands: show run
+      register: show_run_nxos
+
+#    - debug:
+#        msg: "{{ show_run_nxos.stdout[0] }}"
+
+    - copy:
+        content: "{{ show_run_nxos.stdout[0] }}"
+        dest: "/etc/ansible/backups/{{ timestamp.stdout }}/{{ inventory_hostname }}_{{ timestamp.stdout }}.txt"
