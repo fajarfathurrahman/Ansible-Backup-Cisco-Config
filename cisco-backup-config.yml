@@ -18,6 +18,7 @@
 - name: Save Configurations (IOS)
   hosts: cisco-ios
   gather_facts: no
+  ignore_errors: yes
   vars:
     creds:
       host: "{{ host }}"
@@ -43,6 +44,7 @@
 - name: Save Configurations (NX-OS)
   hosts: cisco-nxos
   gather_facts: no
+  ignore_errors: yes
   vars:
     creds:
       host: "{{ host }}"
